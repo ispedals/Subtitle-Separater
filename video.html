@@ -9,14 +9,25 @@ function video_statistics(v) {
 			   ' Paused: ' + v.paused;
 }
 
+var log= (function () {
+	var socket = new WebSocket('http://127.0.0.1:3000/echo');
+	socket.onmessage = function (event) {
+		console.log(event.data);
+	};
+	return function (message) {
+		console.log(message);
+		socket.send(message);
+	};
+})();
+
 var v = document.getElementsByTagName("video")[0];
 
 var handled_events = {
-	'ended': function () { console.log('Video Ended: ' + video_statistics(v));},
-	'pause': function () { console.log('Video Paused: ' + video_statistics(v));},
-	'playing': function () { console.log('Video Paused: ' + video_statistics(v));},
-	'seeked': function () { console.log('Video Seeked: ' + video_statistics(v));},
-	'timeupdate': function () { console.log('Video Time Changed: ' + video_statistics(v));}
+	'ended': function () { log('Video Ended: ' + video_statistics(v));},
+	'pause': function () { log('Video Paused: ' + video_statistics(v));},
+	'playing': function () { log('Video Paused: ' + video_statistics(v));},
+	'seeked': function () { log('Video Seeked: ' + video_statistics(v));},
+	'timeupdate': function () { log('Video Time Changed: ' + video_statistics(v));}
 };
 
 for (var event in handled_events) {
