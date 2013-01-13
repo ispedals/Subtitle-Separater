@@ -9,25 +9,22 @@ function video_statistics(v) {
 			   ' Paused: ' + v.paused;
 }
 
-var log= (function () {
-	var socket = new WebSocket('ws://127.0.0.1:3000/messageToController');
-	socket.onmessage = function (event) {
-		console.log(event.data);
-	};
-	return function (message) {
-		console.log(message);
-		socket.send(message);
-	};
-})();
+function log(message) {
+	console.log(message);
+	socket.send(message);
+}
 
 var v = document.getElementsByTagName("video")[0];
 
 var handled_events = {
+/*
 	'ended': function () { log('Video Ended: ' + video_statistics(v));},
 	'pause': function () { log('Video Paused: ' + video_statistics(v));},
 	'playing': function () { log('Video Paused: ' + video_statistics(v));},
 	'seeked': function () { log('Video Seeked: ' + video_statistics(v));},
 	'timeupdate': function () { log('Video Time Changed: ' + video_statistics(v));}
+*/
+	'timeupdate': function () { log(v.currentTime);}
 };
 
 for (var event in handled_events) {
@@ -35,4 +32,16 @@ for (var event in handled_events) {
 		v.addEventListener( event, handled_events[event], false);
 	}
 }
+
+var socket = new WebSocket('ws://127.0.0.1:3000/messageToController');
+
+var handled_messages = {
+	'pause': function () {v.pause();},
+	'play': function () {v.play();}
+};
+
+socket.onmessage = function (event) {
+	console.log(event.data);
+	handled_messages[event.data]();
+};
 </script>

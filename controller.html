@@ -1,17 +1,29 @@
 <!doctype html>
 <title></title>
 <body>
-<h1 id="Status"></h1>
 <a id="play">play</a>
 <a id="pause">pause</a>
-</body>
+<h1 id="status"></h1>
+<div id="subs"></div>
 <script>
+function display(current_time) {
+	var box = document.getElementsByTagName('div')[0];
+	box.innerHTML='';
+	subs.forEach(function (line) {
+		if(line.start <= current_time * 1000 <= line.end) {
+			box += '<p>' + line.text + '</p>';
+		}
+	});
+}
+
 var socket = new WebSocket('ws://127.0.0.1:3000/messageToVideo');
 socket.onmessage = function (event) {
 	console.log(event.data);
 	document.getElementsByTagName('h1')[0].innerHTML=event.data;
+	display(event.data);
 };
 
-document.getElementsByTagName('a')[0].addEventListener('click', function () { socket.send('Controller: play'); }, false);
-document.getElementsByTagName('a')[1].addEventListener('click', function () { socket.send('Controller: pause'); }, false);
+document.getElementsByTagName('a')[0].addEventListener('click', function () { socket.send('play'); }, false);
+document.getElementsByTagName('a')[1].addEventListener('click', function () { socket.send('pause'); }, false);
 </script>
+</body>
