@@ -6,7 +6,7 @@
 <a id="pause">pause</a>
 </body>
 <script>
-var socket = new WebSocket('ws://127.0.0.1:3000/echo');
+var socket = new WebSocket('ws://127.0.0.1:3000/messageToVideo');
 socket.onmessage = function (event) {
 	console.log(event.data);
 	document.getElementsByTagName('h1')[0].innerHTML=event.data;
