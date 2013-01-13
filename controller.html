@@ -1,0 +1,17 @@
+<!doctype html>
+<title></title>
+<body>
+<h1 id="Status"></h1>
+<a id="play">play</a>
+<a id="pause">pause</a>
+</body>
+<script>
+var socket = new WebSocket('ws://127.0.0.1:3000/echo');
+socket.onmessage = function (event) {
+	console.log(event.data);
+	document.getElementsByTagName('h1')[0].innerHTML=event.data;
+};
+
+document.getElementsByTagName('a')[0].addEventListener('click', function () { socket.send('Controller: play'); }, false);
+document.getElementsByTagName('a')[1].addEventListener('click', function () { socket.send('Controller: pause'); }, false);
+</script>
