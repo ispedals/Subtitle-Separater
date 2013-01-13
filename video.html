@@ -3,3 +3,25 @@
 <body>
 <video src="file:///C:\Users\Owner\Desktop\Live Action Toy Story.mp4" />
 </body>
+<script>
+function video_statistics(v) {
+	return 'Current Time: ' + v.currentTime +
+			   ' Paused: ' + v.paused;
+}
+
+var v = document.getElementsByTagName("video")[0];
+
+var handled_events = {
+	'ended': function () { console.log('Video Ended: ' + video_statistics(v));},
+	'pause': function () { console.log('Video Paused: ' + video_statistics(v));},
+	'playing': function () { console.log('Video Paused: ' + video_statistics(v));},
+	'seeked': function () { console.log('Video Seeked: ' + video_statistics(v));},
+	'timeupdate': function () { console.log('Video Time Changed: ' + video_statistics(v));}
+};
+
+for (var event in handled_events) {
+	if( handled_events.hasOwnProperty( event ) ) {
+		v.addEventListener( event, handled_events[event], false);
+	}
+}
+</script>
