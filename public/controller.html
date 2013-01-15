@@ -59,11 +59,13 @@ function hms(sec){
 }
 
 function display(current_time) {
+	document.getElementsByClassName('highlight')[0].className = 'subtitle';
 	var subtitles = document.getElementsByClassName('subtitle');
 	for(var i = 0; i < subtitles.length; i++) {
 		var line = subtitles[i].dataset;
 		if(line.start <= current_time * 1000  && current_time * 1000 <= line.end) { // current line
 			window.scroll(0, subtitles[i].offsetTop-(window.innerHeight/2));
+			subtitles[i].className = 'subtitle highlight';
 			break;
 		}
 		else if (line.start > current_time * 1000) { //no subtitle is to play, but scroll to last played subtitle
