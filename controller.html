@@ -8,12 +8,17 @@
 <script>
 function display(current_time) {
 	var box = document.getElementsByTagName('div')[0];
-	box.innerHTML='';
-	subs.forEach(function (line) {
+	var text = '';
+	for(var i = 0; i < subs.length; i++) {
+		var line = subs[i];
 		if(line.start <= current_time  && current_time <= line.end) {
-			box.innerHTML += '<p>' + line.text + '</p>';
+			text += '<p>' + line.text + '</p>';
 		}
-	});
+		else if (line.start > current_time) {
+			break;
+		}
+	}
+	box.innerHTML = text;
 }
 
 var socket = new WebSocket('ws://127.0.0.1:3000/messageToVideo');
