@@ -59,22 +59,18 @@ function hms(sec){
 }
 
 function display(current_time) {
-	var box = document.getElementsByTagName('div')[1];
-	var text = '';
-	var prevText='';
-	for(var i = 0; i < subs.length; i++) {
-		var line = subs[i];
-		if(line.start <= current_time * 1000  && current_time * 1000 <= line.end) {
-			if(!prevText && i !== 0) {
-				prevText ='<p id="previous">' + subs[i-1].text + '</p>';
-			}
-			text += '<p>' + line.text + '</p>';
+	var subtitles = document.getElementsByClassName('subtitle');
+	for(var i = 0; i < subtitles.length; i++) {
+		var line = subtitles[i].dataset;
+		if(line.start <= current_time * 1000  && current_time * 1000 <= line.end) { // current line
+			window.scroll(0, subtitles[i].offsetTop-(window.innerHeight/2));
+			break;
 		}
-		else if (line.start > current_time * 1000) {
+		else if (line.start > current_time * 1000) { //no subtitle is to play, but scroll to last played subtitle
+			window.scroll(0, subtitles[i-1].offsetTop-(window.innerHeight/2));
 			break;
 		}
 	}
-	box.innerHTML = text + prevText;
 }
 
 var socket = new WebSocket('ws://127.0.0.1:3000/messageToVideo');
