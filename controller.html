@@ -25,5 +25,10 @@ socket.onmessage = function (event) {
 
 document.getElementsByTagName('a')[0].addEventListener('click', function () { socket.send('play'); }, false);
 document.getElementsByTagName('a')[1].addEventListener('click', function () { socket.send('pause'); }, false);
+
+var subs =[];
+for(var i=0; i<20; i++) {
+	subs.push({start : i, end: i+1, text: i});
+}
 </script>
 </body>
