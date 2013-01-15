@@ -11,7 +11,7 @@ function display(current_time) {
 	box.innerHTML='';
 	subs.forEach(function (line) {
 		if(line.start <= current_time * 1000 <= line.end) {
-			box += '<p>' + line.text + '</p>';
+			box.innerHTML += '<p>' + line.text + '</p>';
 		}
 	});
 }
