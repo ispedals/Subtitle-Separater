@@ -2554,5 +2554,11 @@ var subs =[
       "start" : 1459000
    }
 ];
+var box = document.getElementsByTagName('div')[1];
+var text = '';
+subs.forEach(function (line) {
+	text += '<p class="subtitle" data-start ="' + line.start +'" data-end="' + line.end +'">' + line.text + '</p>';
+});
+box.innerHTML = text;
 </script>
 </body>
