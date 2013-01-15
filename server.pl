@@ -10,7 +10,7 @@ my $send_to_video;
 
 websocket '/messageToController' => sub {
 	$send_to_video = shift;
-	Mojo::IOLoop->stream($send_to_video->tx->connection)->timeout(300);
+	Mojo::IOLoop->stream($send_to_video->tx->connection)->timeout(3600);
 	$send_to_video->on(message => sub {
 		my ($self, $msg) = @_;
 		eval { $send_to_controller->send("$msg");};
@@ -19,7 +19,7 @@ websocket '/messageToController' => sub {
 
 websocket '/messageToVideo' => sub {
 	$send_to_controller = shift;
-	Mojo::IOLoop->stream($send_to_controller->tx->connection)->timeout(300);
+	Mojo::IOLoop->stream($send_to_controller->tx->connection)->timeout(3600);
 	$send_to_controller->on(message => sub {
 		my ($self, $msg) = @_;
 		eval {$send_to_video->send($msg);};
