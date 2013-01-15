@@ -10,7 +10,7 @@ function display(current_time) {
 	var box = document.getElementsByTagName('div')[0];
 	box.innerHTML='';
 	subs.forEach(function (line) {
-		if(line.start <= current_time * 1000 <= line.end) {
+		if(line.start <= current_time <= line.end) {
 			box.innerHTML += '<p>' + line.text + '</p>';
 		}
 	});
