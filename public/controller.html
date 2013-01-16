@@ -3,7 +3,7 @@
 <title></title>
 <style>
 body {
-    background-color: black;
+    background-color: #04030D;
 }
 
 body > * {
@@ -35,6 +35,10 @@ body > * {
 #hud > * {
     margin-left: 20px;
 }
+
+.subtitle.highlight {
+    color: gold;
+}
 </style>
 <body>
 <div id="hud">
@@ -58,14 +62,14 @@ function hms(sec){
          .replace(/^00:/,'');
 }
 
-function display(current_time) {
-	document.getElementsByClassName('highlight')[0].className = 'subtitle';
+function highlight_line(current_time) {
+	Array.prototype.slice.call(document.getElementsByClassName('highlight')).forEach(function (el) { el.className = 'subtitle' });
 	var subtitles = document.getElementsByClassName('subtitle');
 	for(var i = 0; i < subtitles.length; i++) {
 		var line = subtitles[i].dataset;
 		if(line.start <= current_time * 1000  && current_time * 1000 <= line.end) { // current line
 			window.scroll(0, subtitles[i].offsetTop-(window.innerHeight/2));
-			subtitles[i].className = 'subtitle highlight';
+			subtitles[i].className += ' highlight';
 			break;
 		}
 		else if (line.start > current_time * 1000) { //no subtitle is to play, but scroll to last played subtitle
@@ -76,14 +80,26 @@ function display(current_time) {
 }
 
 var socket = new WebSocket('ws://127.0.0.1:3000/messageToVideo');
-socket.onmessage = function (event) {
-	console.log(event.data);
-	document.getElementsByTagName('span')[0].innerHTML=hms(event.data);
-	display(event.data);
-};
+socket.onmessage = (function () {
+	var status = document.getElementById('status');
+	return function (event) {
+		console.log(event.data);
+		status.innerHTML=hms(event.data);
+		highlight_line(event.data);
+	};
+})();
 
-document.getElementsByTagName('a')[0].addEventListener('click', function () { socket.send('play'); }, false);
-document.getElementsByTagName('a')[1].addEventListener('click', function () { socket.send('pause'); }, false);
+function initialize() {
+	document.getElementById('play').addEventListener('click', function () { socket.send('play'); }, false);
+	document.getElementById('pause').addEventListener('click', function () { socket.send('pause'); }, false);
+	var box = document.getElementById('subs');
+	var text = '';
+	subs.forEach(function (line) {
+		text += '<p class="subtitle" data-start ="' + line.start +'" data-end="' + line.end +'">' + line.text + '</p>';
+	});
+	box.innerHTML = text;
+}
+
 var subs =[
    {
       "text" : "ムギ 行こうぜ",
@@ -2556,11 +2572,7 @@ var subs =[
       "start" : 1459000
    }
 ];
-var box = document.getElementsByTagName('div')[1];
-var text = '';
-subs.forEach(function (line) {
-	text += '<p class="subtitle" data-start ="' + line.start +'" data-end="' + line.end +'">' + line.text + '</p>';
-});
-box.innerHTML = text;
+
+initialize();
 </script>
 </body>
