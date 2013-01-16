@@ -25,7 +25,7 @@ body > * {
 
 #hud {
     background: none repeat scroll 0 0 black;
-    font-size: 200%;
+    font-size: 100%;
     position: fixed;
     text-align: center;
     top: 0;
@@ -79,7 +79,7 @@ function highlight_line(current_time) {
 	}
 }
 
-var socket = new WebSocket('ws://127.0.0.1:3000/messageToVideo');
+var socket = new WebSocket('ws://192.168.1.101:3000/messageToVideo');
 socket.onmessage = (function () {
 	var status = document.getElementById('status');
 	return function (event) {
