@@ -25,7 +25,7 @@ body > * {
 
 #hud {
     background: none repeat scroll 0 0 black;
-    font-size: 100%;
+    font-size: 200%;
     position: fixed;
     text-align: center;
     top: 0;
@@ -48,6 +48,7 @@ body > * {
 </div>
 <div id="subs"></div>
 <script>
+var PREVENT_SCROLLING = false;
 function hms(sec){
  var   hr = parseInt(sec/(60*60),10)
      , mi = parseInt(sec/60,10)- (hr*60)
@@ -68,12 +69,12 @@ function highlight_line(current_time) {
 	for(var i = 0; i < subtitles.length; i++) {
 		var line = subtitles[i].dataset;
 		if(line.start <= current_time * 1000  && current_time * 1000 <= line.end) { // current line
-			window.scroll(0, subtitles[i].offsetTop-(window.innerHeight/2));
+			if (!PREVENT_SCROLLING) window.scroll(0, subtitles[i].offsetTop-(window.innerHeight/2));
 			subtitles[i].className += ' highlight';
 			break;
 		}
 		else if (line.start > current_time * 1000) { //no subtitle is to play, but scroll to last played subtitle
-			window.scroll(0, subtitles[i-1].offsetTop-(window.innerHeight/2));
+			if (!PREVENT_SCROLLING) window.scroll(0, subtitles[i-1].offsetTop-(window.innerHeight/2));
 			break;
 		}
 	}
@@ -98,6 +99,16 @@ function initialize() {
 		text += '<p class="subtitle" data-start ="' + line.start +'" data-end="' + line.end +'">' + line.text + '</p>';
 	});
 	box.innerHTML = text;
+	var timeoutID = null;
+	box.addEventListener('touchstart', function () {
+		PREVENT_SCROLLING = true;
+		if(timeoutID) {
+			window.clearTimeout(timeoutID);
+		}
+		timeoutID = setTimeout(function () {
+			PREVENT_SCROLLING = false;
+		}, 5 * 1000);
+	}, false);
 }
 
 var subs =[
