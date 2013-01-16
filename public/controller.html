@@ -30,6 +30,8 @@ body > * {
     text-align: center;
     top: 0;
     width: 100%;
+	padding-bottom: 10px;
+	padding-top: 5px;
 }
 
 #hud > * {
@@ -100,7 +102,7 @@ function initialize() {
 	});
 	box.innerHTML = text;
 	var timeoutID = null;
-	box.addEventListener('touchstart', function () {
+	box.addEventListener('touchmove', function () {
 		PREVENT_SCROLLING = true;
 		if(timeoutID) {
 			window.clearTimeout(timeoutID);
