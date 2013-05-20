@@ -1,47 +1,61 @@
 <!doctype html>
-<title></title>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="content-language" content="ja">
+	<title></title>
+</head>
 <body>
-<video src="file:///C:\Users\Owner\Videos\K-ON!\K-ON!!.s02e02.mp4" />
+	<video src="file:///C:\Users\Owner\Videos\K-ON!\K-ON!!.s02e02.mp4" />
+
+	<script>
+		function video_statistics(v) {
+			return 'Current Time: ' + v.currentTime +
+				' Paused: ' + v.paused;
+		}
+
+		function log(message) {
+			console.log(message);
+			socket.send(message);
+		}
+
+		var v = document.getElementsByTagName("video")[0];
+
+		var handled_events = {
+			/*
+			'ended': function () { log('Video Ended: ' + video_statistics(v));},
+			'pause': function () { log('Video Paused: ' + video_statistics(v));},
+			'playing': function () { log('Video Paused: ' + video_statistics(v));},
+			'seeked': function () { log('Video Seeked: ' + video_statistics(v));},
+			'timeupdate': function () { log('Video Time Changed: ' + video_statistics(v));}
+			*/
+			'timeupdate': function () {
+				log(v.currentTime);
+			}
+		};
+
+		for (var event in handled_events) {
+			if (handled_events.hasOwnProperty(event)) {
+				v.addEventListener(event, handled_events[event], false);
+			}
+		}
+
+		// socket to player with HUD subtitles (defined in controller)
+		var socket = new WebSocket('ws://127.0.0.1:3000/messageToController');
+		var handled_messages = {
+			'pause': function () {
+				v.pause();
+			},
+			'play': function () {
+				v.play();
+			}
+		};
+
+		socket.onmessage = function (event) {
+			console.log(event.data);
+			handled_messages[event.data]();
+		};
+	</script>
 </body>
-<script>
-function video_statistics(v) {
-	return 'Current Time: ' + v.currentTime +
-			   ' Paused: ' + v.paused;
-}
-
-function log(message) {
-	console.log(message);
-	socket.send(message);
-}
-
-var v = document.getElementsByTagName("video")[0];
-
-var handled_events = {
-/*
-	'ended': function () { log('Video Ended: ' + video_statistics(v));},
-	'pause': function () { log('Video Paused: ' + video_statistics(v));},
-	'playing': function () { log('Video Paused: ' + video_statistics(v));},
-	'seeked': function () { log('Video Seeked: ' + video_statistics(v));},
-	'timeupdate': function () { log('Video Time Changed: ' + video_statistics(v));}
-*/
-	'timeupdate': function () { log(v.currentTime);}
-};
-
-for (var event in handled_events) {
-	if( handled_events.hasOwnProperty( event ) ) {
-		v.addEventListener( event, handled_events[event], false);
-	}
-}
-
-var socket = new WebSocket('ws://127.0.0.1:3000/messageToController');
-
-var handled_messages = {
-	'pause': function () {v.pause();},
-	'play': function () {v.play();}
-};
-
-socket.onmessage = function (event) {
-	console.log(event.data);
-	handled_messages[event.data]();
-};
-</script>
+</html>

@@ -2,6 +2,13 @@
 use v5.16;
 use warnings;
 
+=pod
+=head1 DESCRIPTION
+
+This mediates the interaction between the video and the controller by connecting websocket connections between them
+
+=cut
+
 use Mojolicious::Lite;
 use Mojo::IOLoop;
 
